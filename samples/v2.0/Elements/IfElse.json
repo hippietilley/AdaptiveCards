@@ -1,0 +1,35 @@
+{
+	"type": "AdaptiveCard",
+	"version": "2.0",
+	"data": {
+		"stuff": "things"
+	},
+	"body": [
+		[
+			{
+				"{{#if true}}": {
+					"type": "TextBlock",
+					"text": "The if is true"
+				}
+			},
+			{
+				"{{#elseif true}}": {
+					"type": "TextBlock",
+					"text": "The first elseif is true"
+				}
+			},
+			{
+				"{{#elseif true}}": {
+					"type": "TextBlock",
+					"text": "The second elseif is true"
+				}
+			},
+			{
+				"{{#else}}": {
+					"type": "TextBlock",
+					"text": "Nothing is true"
+				}
+			}
+		]
+	]
+}

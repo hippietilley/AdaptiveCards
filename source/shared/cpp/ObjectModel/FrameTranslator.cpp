@@ -213,10 +213,88 @@ Json::Value DataBindString(const Json::Value& sourceCard, const Json::Value& fra
     }
 }
 
+bool EvaluateConditional(std::string condtional, const Json::Value& sourceCard, const Json::Value& frame)
+{
+    return !condtional.compare(0, condtional.length(), "true");
+}
+
+Json::Value DataBindIfElseArray(const Json::Value& sourceCard, const Json::Value& frame)
+{
+    Json::Value result;
+
+    // Check if the first property of the first object is a #if
+    Json::Value arrayElement = frame[0];
+    if (arrayElement.isObject())
+    {
+        size_t startPosition, endPosition;
+        std::string objectKey = arrayElement.getMemberNames()[0];
+        std::string dataBindingKey = GetKey(objectKey, 0, "{{", "}}", &startPosition, &endPosition);
+
+        if (!dataBindingKey.empty())
+        {
+            std::string ifString("#if");
+            if (!dataBindingKey.compare(0, ifString.length(), ifString))
+            {
+                // This is a #if case, evaluate the conditional
+                std::string conditional = GetArgument(dataBindingKey, ifString.length());
+                if (EvaluateConditional(conditional, sourceCard, frame))
+                {
+                    return DataBindJson(sourceCard, arrayElement[objectKey]);
+                }
+                else
+                {
+                    // Handle #elseif cases
+                    unsigned int frameIndex;
+                    for (frameIndex = 1; frameIndex < frame.size(); frameIndex++)
+                    {
+                        arrayElement = frame[frameIndex];
+                        if (arrayElement.isObject())
+                        {
+                            objectKey = arrayElement.getMemberNames()[0];
+                            dataBindingKey = GetKey(objectKey, 0, "{{", "}}", &startPosition, &endPosition);
+
+                            std::string elseIfString("#elseif");
+                            if (!dataBindingKey.compare(0, elseIfString.length(), elseIfString))
+                            {
+                                conditional = GetArgument(dataBindingKey, elseIfString.length());
+                                if (EvaluateConditional(conditional, sourceCard, frame))
+                                {
+                                    return DataBindJson(sourceCard, arrayElement[objectKey]);
+                                }
+                            }
+                            else
+                            {
+                                // Break out of the loop if we see something other than #elseif
+                                break;
+                            }
+                        }
+                    }
+
+                    // If there are still items left, check for #else
+                    if (frameIndex < frame.size())
+                    {
+                        std::string elseString("#else");
+                        if (!dataBindingKey.compare(0, elseString.length(), elseString))
+                        {
+                            return DataBindJson(sourceCard, arrayElement[objectKey]);
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return result;
+}
+
 Json::Value DataBindArray(const Json::Value& sourceCard, const Json::Value& frame)
 {
+    Json::Value result = DataBindIfElseArray(sourceCard, frame);
+    if (!result.empty())
+    {
+        return result;
+    }
+
     // Loop through the sub elements of the array and bind each one
-    Json::Value result;
     for (Json::Value::const_iterator it = frame.begin(); it != frame.end(); it++)
     {
         Json::Value elementResult = DataBindJson(sourceCard, *it);
