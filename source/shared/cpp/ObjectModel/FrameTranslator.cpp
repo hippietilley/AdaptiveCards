@@ -224,10 +224,8 @@ bool EvaluateConditional(std::string condtional, const Json::Value& sourceCard, 
     return !condtional.compare(0, condtional.length(), "true");
 }
 
-Json::Value DataBindIfElseArray(const Json::Value& sourceCard, const Json::Value& frame)
+bool DataBindIfElseArray(const Json::Value& sourceCard, const Json::Value& frame, Json::Value& resultOut)
 {
-    Json::Value result;
-
     // Check if the first property of the first object is a #if
     Json::Value arrayElement = frame[0];
     if (arrayElement.isObject())
@@ -236,10 +234,12 @@ Json::Value DataBindIfElseArray(const Json::Value& sourceCard, const Json::Value
         std::string objectKey = arrayElement.getMemberNames()[0];
         if (IsKeyword(objectKey, 0, "#if", conditional))
         {
+            Json::Value result;
+
             // This is a #if case, evaluate the conditional
             if (EvaluateConditional(conditional, sourceCard, frame))
             {
-                return DataBindJson(sourceCard, arrayElement[objectKey]);
+                result = DataBindJson(sourceCard, arrayElement[objectKey]);
             }
             else
             {
@@ -256,7 +256,7 @@ Json::Value DataBindIfElseArray(const Json::Value& sourceCard, const Json::Value
                         {
                             if (EvaluateConditional(conditional, sourceCard, frame))
                             {
-                                return DataBindJson(sourceCard, arrayElement[objectKey]);
+                                result = DataBindJson(sourceCard, arrayElement[objectKey]);
                             }
                         }
                         else
@@ -273,19 +273,23 @@ Json::Value DataBindIfElseArray(const Json::Value& sourceCard, const Json::Value
                     std::string arg;
                     if (IsKeyword(objectKey, 0, "#else", arg))
                     {
-                        return DataBindJson(sourceCard, arrayElement[objectKey]);
+                        result = DataBindJson(sourceCard, arrayElement[objectKey]);
                     }
                 }
             }
+
+            resultOut = result;
+            return true;
         }
     }
-    return result;
+    return false;
 }
 
 Json::Value DataBindArray(const Json::Value& sourceCard, const Json::Value& frame)
 {
-    Json::Value result = DataBindIfElseArray(sourceCard, frame);
-    if (!result.empty())
+    // Handle the case of a #if/#elseif/#else array
+    Json::Value result;
+    if (DataBindIfElseArray(sourceCard, frame, result))
     {
         return result;
     }
@@ -294,12 +298,7 @@ Json::Value DataBindArray(const Json::Value& sourceCard, const Json::Value& fram
     for (Json::Value::const_iterator it = frame.begin(); it != frame.end(); it++)
     {
         Json::Value elementResult = DataBindJson(sourceCard, *it);
-        if (elementResult.empty())
-        {
-            // If the result is empty, don't add it to the json
-            continue;
-        }
-        else if (elementResult.isArray())
+        if (elementResult.isArray())
         {
             // If we get an array back (from an {{#each}} element, for example), append the
             // elements of that array to this one.
@@ -320,11 +319,10 @@ Json::Value DataBindArray(const Json::Value& sourceCard, const Json::Value& fram
 // Handles #each arrays with syntax such as the following:
 // {{#each myArray}} : {"type" : "TextBlock, "text" : "{{foo}}"}
 // where "myArray" is an array of objects each with a "foo" property
-Json::Value DataBindAsEachObject(const Json::Value& sourceCard, const Json::Value& frame)
+bool DataBindAsEachObject(const Json::Value& sourceCard, const Json::Value& frame, Json::Value& resultOut)
 {
     // A #each object will have one value with a key that looks like
     // {{#each myArray}}
-    Json::Value result;
     if (frame.size() == 1)
     {
         auto memberNames = frame.getMemberNames();
@@ -341,15 +339,18 @@ Json::Value DataBindAsEachObject(const Json::Value& sourceCard, const Json::Valu
                 {
                     // Iterate throught the array and data bind, using each element of the array
                     // as the source and the value of the key as the frame
+                    Json::Value result;
                     for (Json::Value::const_iterator itArray = eachArray.begin(); itArray != eachArray.end(); itArray++)
                     {
                         result.append(DataBindJson(*itArray, frame[jsonKey]));
                     }
+                    resultOut = result;
+                    return true;
                 }
             }
         }
     }
-    return result;
+    return false;
 }
 
 Json::Value DataBindObject(const Json::Value& sourceCard, const Json::Value& frame)
@@ -357,26 +358,17 @@ Json::Value DataBindObject(const Json::Value& sourceCard, const Json::Value& fra
     Json::Value result;
 
     // Check if this is a #each object.
-    result = DataBindAsEachObject(sourceCard, frame);
-    if (!result.empty())
+    if (DataBindAsEachObject(sourceCard, frame, result))
     {
         return result;
     }
-    else
+
+    // Loop through the sub elements of the object and bind each one
+    for (Json::Value::const_iterator it = frame.begin(); it != frame.end(); it++)
     {
-        // Loop through the sub elements of the object and bind each one
-        for (Json::Value::const_iterator it = frame.begin(); it != frame.end(); it++)
-        {
-            std::string key = it.key().asCString();
-            // Data bind the json value in "key" : "value" and add it to the result;
-            Json::Value elementResult = DataBindJson(sourceCard, *it);
-            if (elementResult.empty())
-            {
-                // If the result is empty, don't add it to the json
-                continue;
-            }
-            result[key] = elementResult;
-        }
+        std::string key = it.key().asCString();
+        // Data bind the json value in "key" : "value" and add it to the result;
+        result[key] = DataBindJson(sourceCard, *it);
     }
 
     // Check if the object should be pruned. If so, return an empty result
@@ -419,13 +411,8 @@ Json::Value DataBindJson(const Json::Value& sourceCard, const Json::Value& frame
 
 Json::Value ApplyJsonTemplating(const Json::Value& sourceCard, const Json::Value& frame)
 {
-    // First bind the card to its data if present
-    Json::Value dataBoundCard = sourceCard;
-    Json::Value data = sourceCard["data"];
-    if (!data.empty())
-    {
-        dataBoundCard = DataBindJson(data, sourceCard);
-    }
+    // First bind the card to its data if present. This will also handle special keywords (#if, #each, etc).
+    Json::Value dataBoundCard = DataBindJson(sourceCard["data"], sourceCard);
 
     Json::Value result = dataBoundCard;
     if (!frame.empty())

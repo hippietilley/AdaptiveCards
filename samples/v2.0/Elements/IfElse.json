@@ -1,9 +1,6 @@
 {
 	"type": "AdaptiveCard",
 	"version": "2.0",
-	"data": {
-		"stuff": "things"
-	},
 	"body": [
 		[
 			{

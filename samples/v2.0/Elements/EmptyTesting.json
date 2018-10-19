@@ -1,0 +1,13 @@
+{
+	"type": "AdaptiveCard",
+	"version": "2.0",
+	"data": {
+		"foo": "bar"
+	},
+	"body": [
+		{
+			"type": "TextBlock",
+			"text": "{{foo}}"
+		}
+	]
+}
