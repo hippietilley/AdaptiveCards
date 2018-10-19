@@ -36,22 +36,35 @@ std::string GetKey(std::string string, size_t startPosition, const char* openBra
     {
         key = string.substr(bracesStartPosition + bracesStart.length(),
                             bracesEndPosition - bracesStartPosition - bracesStart.length());
-        *keyStartPosition = bracesStartPosition;
-        *keyEndPosition = bracesEndPosition + bracesEnd.length() - 1;
+
+        if (keyStartPosition)
+        {
+            *keyStartPosition = bracesStartPosition;
+        }
+        if (keyEndPosition)
+        {
+            *keyEndPosition = bracesEndPosition + bracesEnd.length() - 1;
+        }
     }
 
     return key;
 }
 
-// Get the argument of a data binding function.
-std::string GetArgument(std::string& key, unsigned int startPosition)
+// Determines if this string matches the given keyword, and returns any argument that may be present
+bool IsKeyword(const std::string& string, size_t startPosition, const std::string& keyword, std::string& argument)
 {
-    size_t argumentStart = key.find_first_not_of(" ", startPosition);
-    if (argumentStart != std::string::npos)
+    std::string key = GetKey(string, startPosition, "{{", "}}", nullptr, nullptr);
+
+    if (!key.compare(0, keyword.length(), keyword))
     {
-        return key.substr(argumentStart, key.length() - argumentStart);
+        size_t argumentStart = key.find_first_not_of(" ", keyword.length());
+        if (argumentStart != std::string::npos)
+        {
+            argument = key.substr(argumentStart, key.length() - argumentStart);
+        }
+        return true;
     }
-    return std::string();
+    return false;
 }
 
 // Gets a databinding key between double curly braces {{key}} and checks for the existential operator.
@@ -61,14 +74,7 @@ std::string GetDataBindingKey(std::string string, size_t startPosition, size_t* 
 
     // If the databinding key includes the existential operator ("{{#? stuff}}"), set the boolean indicating it should
     // only be included if it exits, and return just the argument ("stuff") as the key
-    *includeOnlyIfExists = false;
-    std::string existentialString = "#?";
-    if (!key.compare(0, existentialString.length(), existentialString))
-    {
-        *includeOnlyIfExists = true;
-        key = GetArgument(key, existentialString.length());
-    }
-
+    *includeOnlyIfExists = IsKeyword(string, startPosition, "#?", key);
     return key;
 }
 
@@ -226,58 +232,48 @@ Json::Value DataBindIfElseArray(const Json::Value& sourceCard, const Json::Value
     Json::Value arrayElement = frame[0];
     if (arrayElement.isObject())
     {
-        size_t startPosition, endPosition;
+        std::string conditional;
         std::string objectKey = arrayElement.getMemberNames()[0];
-        std::string dataBindingKey = GetKey(objectKey, 0, "{{", "}}", &startPosition, &endPosition);
-
-        if (!dataBindingKey.empty())
+        if (IsKeyword(objectKey, 0, "#if", conditional))
         {
-            std::string ifString("#if");
-            if (!dataBindingKey.compare(0, ifString.length(), ifString))
+            // This is a #if case, evaluate the conditional
+            if (EvaluateConditional(conditional, sourceCard, frame))
             {
-                // This is a #if case, evaluate the conditional
-                std::string conditional = GetArgument(dataBindingKey, ifString.length());
-                if (EvaluateConditional(conditional, sourceCard, frame))
+                return DataBindJson(sourceCard, arrayElement[objectKey]);
+            }
+            else
+            {
+                // Handle #elseif cases
+                unsigned int frameIndex;
+                for (frameIndex = 1; frameIndex < frame.size(); frameIndex++)
                 {
-                    return DataBindJson(sourceCard, arrayElement[objectKey]);
-                }
-                else
-                {
-                    // Handle #elseif cases
-                    unsigned int frameIndex;
-                    for (frameIndex = 1; frameIndex < frame.size(); frameIndex++)
+                    arrayElement = frame[frameIndex];
+                    if (arrayElement.isObject())
                     {
-                        arrayElement = frame[frameIndex];
-                        if (arrayElement.isObject())
-                        {
-                            objectKey = arrayElement.getMemberNames()[0];
-                            dataBindingKey = GetKey(objectKey, 0, "{{", "}}", &startPosition, &endPosition);
+                        objectKey = arrayElement.getMemberNames()[0];
 
-                            std::string elseIfString("#elseif");
-                            if (!dataBindingKey.compare(0, elseIfString.length(), elseIfString))
+                        if (IsKeyword(objectKey, 0, "#elseif", conditional))
+                        {
+                            if (EvaluateConditional(conditional, sourceCard, frame))
                             {
-                                conditional = GetArgument(dataBindingKey, elseIfString.length());
-                                if (EvaluateConditional(conditional, sourceCard, frame))
-                                {
-                                    return DataBindJson(sourceCard, arrayElement[objectKey]);
-                                }
+                                return DataBindJson(sourceCard, arrayElement[objectKey]);
                             }
-                            else
-                            {
-                                // Break out of the loop if we see something other than #elseif
-                                break;
-                            }
+                        }
+                        else
+                        {
+                            // Break out of the loop if we see something other than #elseif
+                            break;
                         }
                     }
+                }
 
-                    // If there are still items left, check for #else
-                    if (frameIndex < frame.size())
+                // If there are still items left, check for #else
+                if (frameIndex < frame.size())
+                {
+                    std::string arg;
+                    if (IsKeyword(objectKey, 0, "#else", arg))
                     {
-                        std::string elseString("#else");
-                        if (!dataBindingKey.compare(0, elseString.length(), elseString))
-                        {
-                            return DataBindJson(sourceCard, arrayElement[objectKey]);
-                        }
+                        return DataBindJson(sourceCard, arrayElement[objectKey]);
                     }
                 }
             }
@@ -334,22 +330,13 @@ Json::Value DataBindAsEachObject(const Json::Value& sourceCard, const Json::Valu
         auto memberNames = frame.getMemberNames();
         std::string jsonKey = memberNames[0];
 
-        size_t startPosition, endPosition;
-        std::string dataBindingKey = GetKey(jsonKey, 0, "{{", "}}", &startPosition, &endPosition);
-
-        if (!dataBindingKey.empty())
+        std::string arrayName;
+        if (IsKeyword(jsonKey, 0, "#each", arrayName))
         {
-            std::string eachString("#each");
-            if (!dataBindingKey.compare(0, eachString.length(), eachString))
+            if (!arrayName.empty())
             {
-                // Get the name of the array
-                std::string arrayName = GetArgument(dataBindingKey, eachString.length());
                 Json::Value eachArray = sourceCard;
-                if (!arrayName.empty())
-                {
-                    eachArray = sourceCard[arrayName];
-                }
-
+                eachArray = sourceCard[arrayName];
                 if (eachArray.isArray())
                 {
                     // Iterate throught the array and data bind, using each element of the array
