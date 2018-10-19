@@ -426,6 +426,8 @@ Json::Value ApplyJsonTemplating(const Json::Value& sourceCard, const Json::Value
         result = DataBindJson(dataSource, frame);
     }
 
+    Json::FastWriter fastWriter;
+    std::string resultString = fastWriter.write(result);
     return result;
 }
 
