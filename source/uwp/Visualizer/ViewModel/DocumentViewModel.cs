@@ -32,6 +32,13 @@ namespace AdaptiveCardVisualizer.ViewModel
             private set { SetProperty(ref _renderedCard, value); }
         }
 
+        private String _templatedJson;
+        public String TemplatedJson
+        {
+            get { return _templatedJson; }
+            private set { SetProperty(ref _templatedJson, value); }
+        }
+
         public static async Task<DocumentViewModel> LoadFromFileAsync(MainPageViewModel mainPageViewModel, IStorageFile file, string token)
         {
             var answer = new DocumentViewModel(mainPageViewModel);
@@ -81,7 +88,11 @@ namespace AdaptiveCardVisualizer.ViewModel
                 {
                     JsonObject jsonFrame;
                     JsonObject.TryParse(MainPageViewModel.FrameEditor.Frame, out jsonFrame);
-                    AdaptiveCardParseResult parseResult = AdaptiveCard.FromJson(jsonObject, null, null, jsonFrame);
+
+                    JsonObject templateResult = AdaptiveJsonTemplater.ApplyJsonTemplating(jsonObject, jsonFrame);
+                    TemplatedJson = templateResult.ToString();
+
+                    AdaptiveCardParseResult parseResult = AdaptiveCard.FromJson(templateResult);
 
                     RenderedAdaptiveCard renderResult = _renderer.RenderAdaptiveCard(parseResult.AdaptiveCard);
                     if (renderResult.FrameworkElement != null)
