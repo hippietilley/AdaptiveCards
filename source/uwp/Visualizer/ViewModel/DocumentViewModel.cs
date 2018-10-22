@@ -89,7 +89,13 @@ namespace AdaptiveCardVisualizer.ViewModel
                     JsonObject jsonFrame;
                     JsonObject.TryParse(MainPageViewModel.FrameEditor.Frame, out jsonFrame);
 
-                    JsonObject templateResult = AdaptiveJsonTemplater.ApplyJsonTemplating(jsonObject, jsonFrame);
+                    JsonObject jsonRuntimeObject = null;
+                    if (MainPageViewModel.RuntimeObjectEditor.RuntimeObject != null)
+                    {
+                        JsonObject.TryParse(MainPageViewModel.RuntimeObjectEditor.RuntimeObject, out jsonRuntimeObject);
+                    }
+
+                    JsonObject templateResult = AdaptiveJsonTemplater.ApplyJsonTemplating(jsonObject, jsonFrame, jsonRuntimeObject);
                     TemplatedJson = templateResult.ToString();
 
                     AdaptiveCardParseResult parseResult = AdaptiveCard.FromJson(templateResult);

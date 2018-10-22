@@ -120,6 +120,7 @@
     <AppxManifest Include="Package.appxmanifest">
       <SubType>Designer</SubType>
     </AppxManifest>
+    <Content Include="..\..\..\samples\v2.0\Elements\Notification.json" />
     <None Include="AdaptiveCardTestApp_TemporaryKey.pfx" />
   </ItemGroup>
   <ItemGroup>
@@ -151,8 +152,29 @@
     <Content Include="..\..\..\samples\v1.2\Elements\*.json">
       <Link>LinkedCards\v1.2\Elements\%(FileName)</Link>
     </Content>
-    <Content Include="..\..\..\samples\v2.0\Elements\*.json">
-      <Link>LinkedCards\v2.0\Elements\%(FileName)</Link>
+    <Content Include="..\..\..\samples\v2.0\Elements\DotsAndArrayIndex.json">
+      <Link>LinkedCards\v2.0\Elements\DotsAndArrayIndex</Link>
+    </Content>
+    <Content Include="..\..\..\samples\v2.0\Elements\Each.json">
+      <Link>LinkedCards\v2.0\Elements\Each</Link>
+    </Content>
+    <Content Include="..\..\..\samples\v2.0\Elements\EmptyTesting.json">
+      <Link>LinkedCards\v2.0\Elements\EmptyTesting</Link>
+    </Content>
+    <Content Include="..\..\..\samples\v2.0\Elements\ExistentialOperator.json">
+      <Link>LinkedCards\v2.0\Elements\ExistentialOperator</Link>
+    </Content>
+    <Content Include="..\..\..\samples\v2.0\Elements\Header.json">
+      <Link>LinkedCards\v2.0\Elements\Header</Link>
+    </Content>
+    <Content Include="..\..\..\samples\v2.0\Elements\IfElse.json">
+      <Link>LinkedCards\v2.0\Elements\IfElse</Link>
+    </Content>
+    <Content Include="..\..\..\samples\v2.0\Elements\InConditionals.json">
+      <Link>LinkedCards\v2.0\Elements\InConditionals</Link>
+    </Content>
+    <Content Include="..\..\..\samples\v2.0\Elements\Notification.json">
+      <Link>LinkedCards\v2.0\Elements\Notification</Link>
     </Content>
     <Content Include="..\..\..\samples\HostConfig\*.json">
       <Link>LinkedHostConfigs\%(FileName)</Link>
