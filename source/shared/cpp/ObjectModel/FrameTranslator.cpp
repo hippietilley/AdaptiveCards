@@ -547,6 +547,7 @@ bool ShouldJsonObjectBePruned(Json::Value value)
     {
         // Existing cards support empty action titles do don't prune here for now
         // return value["title"].empty();
+        return false;
     }
     else
     {
