@@ -31,7 +31,7 @@ std::string GetKey(std::string string, size_t startPosition, const char* openBra
     std::string bracesEnd(closeBraces);
 
     size_t bracesStartPosition = string.find(bracesStart, startPosition);
-    size_t bracesEndPosition = string.find(bracesEnd, startPosition);
+    size_t bracesEndPosition = string.find(bracesEnd, bracesStartPosition + 1);
 
     std::string key;
     if (bracesStartPosition != std::string::npos && bracesEndPosition != std::string::npos)
@@ -234,23 +234,28 @@ Json::Value DataBindString(const Json::Value& sourceCard, const Json::Value& fra
 
 bool EvaluateAsInConditional(std::string conditional, const Json::Value& sourceCard)
 {
-    // Evaluates conditionals of the form {{#if foo in bar}}
-    std::string in = "in";
-    size_t inPosition = conditional.find(in, 0);
+    // Evaluates conditionals of the form {{#if 'foo' in bar}}
 
-    if (inPosition != std::string::npos)
+    // Find a variable in single quotes
+    size_t startQuotePosition, endQuotePosition;
+    std::string variable = GetKey(conditional, 0, "\'", "\'", &startQuotePosition, &endQuotePosition);
+    if (startQuotePosition == 0 && !variable.empty())
     {
-        std::string variable = conditional.substr(0, inPosition);
-        variable = variable.substr(0, variable.find_last_not_of(c_whitespace) + 1);
-
-        std::string scope = conditional.substr(inPosition + in.length(), conditional.length());
-        scope = scope.substr(scope.find_first_not_of(c_whitespace), scope.length());
-
-        // For a conditional of the form {{#if foo in bar}}, create a frame {{#? bar.foo}} to evaluate with
-        // DataBindString. This will return empty if it doesn't exist, non-empty if it does.
-        Json::Value frame("{{#? " + scope + "." + variable + "}}");
-        Json::Value result = DataBindString(sourceCard, frame);
-        return !result.empty();
+        std::string inString = "in";
+        size_t inPositon = conditional.find_first_not_of(c_whitespace, endQuotePosition + 1);
+        if (!conditional.compare(inPositon, inString.length(), inString))
+        {
+            // Find the scope after the whitespace after "in"
+            size_t scopeStartPosition = conditional.find_first_not_of(c_whitespace, inPositon + inString.length());
+            size_t scopeEndPosition = conditional.find_last_not_of(c_whitespace);
+            std::string scope = conditional.substr(scopeStartPosition, scopeEndPosition - scopeStartPosition + 1);
+            
+            // For a conditional of the form {{#if 'foo' in bar}}, create a frame {{#? bar.foo}} to evaluate with
+            // DataBindString. This will return empty if it doesn't exist, non-empty if it does.
+            Json::Value frame("{{#? " + scope + "." + variable + "}}");
+            Json::Value result = DataBindString(sourceCard, frame);
+            return !result.empty();
+        }
     }
 
     return false;

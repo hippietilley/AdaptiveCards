@@ -12,7 +12,7 @@
 	"body": [
 		[
 			{
-				"{{#if bar in object1}}": {
+				"{{#if 'bar' in object1}}": {
 					"type": "TextBlock",
 					"text": "bar exists in object1"
 				}
@@ -26,7 +26,7 @@
 		],
 		[
 			{
-				"{{#if bar in object2}}": {
+				"{{#if 'bar' in object2}}": {
 					"type": "TextBlock",
 					"text": "bar exists in object2"
 				}
@@ -40,7 +40,7 @@
 		],
 		[
 			{
-				"{{#if object1 in this}}": {
+				"{{#if 'object1' in this}}": {
 					"type": "TextBlock",
 					"text": "object1 exists"
 				}
@@ -54,7 +54,7 @@
 		],
 		[
 			{
-				"{{#if object3 in this}}": {
+				"{{#if 'object3' in this}}": {
 					"type": "TextBlock",
 					"text": "object3 exists"
 				}
