@@ -96,11 +96,11 @@ namespace AdaptiveCardVisualizer.ViewModel
                     }
 
                     JsonObject templateResult = AdaptiveJsonTemplater.ApplyJsonTemplating(jsonObject, jsonFrame, jsonRuntimeObject);
-                    TemplatedJson = templateResult.ToString();
+
+                    dynamic parsedJson = JsonConvert.DeserializeObject(templateResult.ToString());
+                    TemplatedJson = JsonConvert.SerializeObject(parsedJson, Formatting.Indented);
 
                     AdaptiveCardParseResult parseResult = AdaptiveCard.FromJson(templateResult);
-
-                    TemplatedJson = parseResult.AdaptiveCard.ToJson().ToString();
 
                     RenderedAdaptiveCard renderResult = _renderer.RenderAdaptiveCard(parseResult.AdaptiveCard);
                     if (renderResult.FrameworkElement != null)
