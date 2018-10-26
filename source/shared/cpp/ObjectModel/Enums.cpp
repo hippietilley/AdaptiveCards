@@ -13,11 +13,11 @@
 
 namespace AdaptiveSharedNamespace
 {
-    void GetAdaptiveCardSchemaKeyEnumMappings(
+    static void GetAdaptiveCardSchemaKeyEnumMappings(
         std::unordered_map<AdaptiveCardSchemaKey, std::string, EnumHash>* adaptiveCardSchemaKeyEnumToNameOut,
         std::unordered_map<std::string, AdaptiveCardSchemaKey, CaseInsensitiveHash, CaseInsensitiveEqualTo>* adaptiveCardSchemaKeyNameToEnumOut)
     {
-        static std::unordered_map<AdaptiveCardSchemaKey, std::string, EnumHash> adaptiveCardSchemaKeyEnumToName = {
+        static const std::unordered_map<AdaptiveCardSchemaKey, std::string, EnumHash> adaptiveCardSchemaKeyEnumToName = {
             {AdaptiveCardSchemaKey::Accent, "accent"},
             {AdaptiveCardSchemaKey::ActionAlignment, "actionAlignment"},
             {AdaptiveCardSchemaKey::ActionMode, "actionMode"},
@@ -162,8 +162,9 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetCardElementTypeEnumMappings(std::unordered_map<CardElementType, std::string, EnumHash>* cardElementTypeEnumToNameOut,
-                                        std::unordered_map<std::string, CardElementType, CaseInsensitiveHash, CaseInsensitiveEqualTo>* cardElementTypeNameToEnumOut)
+    static void GetCardElementTypeEnumMappings(
+        std::unordered_map<CardElementType, std::string, EnumHash>* cardElementTypeEnumToNameOut,
+        std::unordered_map<std::string, CardElementType, CaseInsensitiveHash, CaseInsensitiveEqualTo>* cardElementTypeNameToEnumOut)
     {
         static std::unordered_map<CardElementType, std::string, EnumHash> cardElementTypeEnumToName = {
             {CardElementType::AdaptiveCard, "AdaptiveCard"},
@@ -185,7 +186,7 @@ namespace AdaptiveSharedNamespace
             {CardElementType::Unknown, "Unknown"},
             {CardElementType::Media, "Media"},
         };
-        static std::unordered_map<std::string, CardElementType, CaseInsensitiveHash, CaseInsensitiveEqualTo> cardElementTypeNameToEnum =
+        static const std::unordered_map<std::string, CardElementType, CaseInsensitiveHash, CaseInsensitiveEqualTo> cardElementTypeNameToEnum =
             GenerateStringToEnumMap<CardElementType>(cardElementTypeEnumToName);
 
         if (cardElementTypeEnumToNameOut != nullptr)
@@ -199,14 +200,15 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetActionTypeEnumMappings(std::unordered_map<ActionType, std::string, EnumHash>* actionTypeEnumToNameOut,
-                                   std::unordered_map<std::string, ActionType, CaseInsensitiveHash, CaseInsensitiveEqualTo>* actionTypeNameToEnumOut)
+    static void GetActionTypeEnumMappings(std::unordered_map<ActionType, std::string, EnumHash>* actionTypeEnumToNameOut,
+                                          std::unordered_map<std::string, ActionType, CaseInsensitiveHash, CaseInsensitiveEqualTo>* actionTypeNameToEnumOut)
     {
-        static std::unordered_map<ActionType, std::string, EnumHash> actionTypeEnumToName = {{ActionType::OpenUrl, "Action.OpenUrl"},
-                                                                                             {ActionType::ShowCard, "Action.ShowCard"},
-                                                                                             {ActionType::Submit, "Action.Submit"},
-                                                                                             {ActionType::Custom, "Custom"}};
-        static std::unordered_map<std::string, ActionType, CaseInsensitiveHash, CaseInsensitiveEqualTo> actionTypeNameToEnum =
+        static const std::unordered_map<ActionType, std::string, EnumHash> actionTypeEnumToName = {
+            {ActionType::OpenUrl, "Action.OpenUrl"},
+            {ActionType::ShowCard, "Action.ShowCard"},
+            {ActionType::Submit, "Action.Submit"},
+            {ActionType::Custom, "Custom"}};
+        static const std::unordered_map<std::string, ActionType, CaseInsensitiveHash, CaseInsensitiveEqualTo> actionTypeNameToEnum =
             GenerateStringToEnumMap<ActionType>(actionTypeEnumToName);
 
         if (actionTypeEnumToNameOut != nullptr)
@@ -220,13 +222,13 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetHeightTypeEnumMappings(std::unordered_map<HeightType, std::string, EnumHash>* heightTypeEnumToNameOut,
-                                   std::unordered_map<std::string, HeightType, CaseInsensitiveHash, CaseInsensitiveEqualTo>* heightTypeNameToEnumOut)
+    static void GetHeightTypeEnumMappings(std::unordered_map<HeightType, std::string, EnumHash>* heightTypeEnumToNameOut,
+                                          std::unordered_map<std::string, HeightType, CaseInsensitiveHash, CaseInsensitiveEqualTo>* heightTypeNameToEnumOut)
     {
-        static std::unordered_map<HeightType, std::string, EnumHash> heightTypeEnumToName = {{HeightType::Auto, "Auto"},
-                                                                                             {HeightType::Stretch, "Stretch"}};
+        static const std::unordered_map<HeightType, std::string, EnumHash> heightTypeEnumToName = {{HeightType::Auto, "Auto"},
+                                                                                                   {HeightType::Stretch, "Stretch"}};
 
-        static std::unordered_map<std::string, HeightType, CaseInsensitiveHash, CaseInsensitiveEqualTo> heightTypeNameToEnum =
+        static const std::unordered_map<std::string, HeightType, CaseInsensitiveHash, CaseInsensitiveEqualTo> heightTypeNameToEnum =
             GenerateStringToEnumMap<HeightType>(heightTypeEnumToName);
 
         if (heightTypeEnumToNameOut != nullptr)
@@ -240,10 +242,10 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetSpacingMappings(std::unordered_map<Spacing, std::string, EnumHash>* spacingEnumToNameOut,
-                            std::unordered_map<std::string, Spacing, CaseInsensitiveHash, CaseInsensitiveEqualTo>* spacingNameToEnumOut)
+    static void GetSpacingMappings(std::unordered_map<Spacing, std::string, EnumHash>* spacingEnumToNameOut,
+                                   std::unordered_map<std::string, Spacing, CaseInsensitiveHash, CaseInsensitiveEqualTo>* spacingNameToEnumOut)
     {
-        static std::unordered_map<Spacing, std::string, EnumHash> spacingEnumToName = {
+        static const std::unordered_map<Spacing, std::string, EnumHash> spacingEnumToName = {
             {Spacing::Default, "default"},
             {Spacing::None, "none"},
             {Spacing::Small, "small"},
@@ -252,7 +254,7 @@ namespace AdaptiveSharedNamespace
             {Spacing::ExtraLarge, "extraLarge"},
             {Spacing::Padding, "padding"},
         };
-        static std::unordered_map<std::string, Spacing, CaseInsensitiveHash, CaseInsensitiveEqualTo> spacingNameToEnum =
+        static const std::unordered_map<std::string, Spacing, CaseInsensitiveHash, CaseInsensitiveEqualTo> spacingNameToEnum =
             GenerateStringToEnumMap<Spacing>(spacingEnumToName);
 
         if (spacingEnumToNameOut != nullptr)
@@ -266,15 +268,15 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetSeparatorThicknessEnumMappings(
+    static void GetSeparatorThicknessEnumMappings(
         std::unordered_map<SeparatorThickness, std::string, EnumHash>* separatorThicknessEnumToNameOut,
         std::unordered_map<std::string, SeparatorThickness, CaseInsensitiveHash, CaseInsensitiveEqualTo>* separatorThicknessNameToEnumOut)
     {
-        static std::unordered_map<SeparatorThickness, std::string, EnumHash> separatorThicknessEnumToName = {
+        static const std::unordered_map<SeparatorThickness, std::string, EnumHash> separatorThicknessEnumToName = {
             {SeparatorThickness::Default, "default"},
             {SeparatorThickness::Thick, "thick"},
         };
-        static std::unordered_map<std::string, SeparatorThickness, CaseInsensitiveHash, CaseInsensitiveEqualTo> separatorThicknessNameToEnum =
+        static const std::unordered_map<std::string, SeparatorThickness, CaseInsensitiveHash, CaseInsensitiveEqualTo> separatorThicknessNameToEnum =
             GenerateStringToEnumMap<SeparatorThickness>(separatorThicknessEnumToName);
 
         if (separatorThicknessEnumToNameOut != nullptr)
@@ -288,13 +290,13 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetImageStyleEnumMappings(std::unordered_map<ImageStyle, std::string, EnumHash>* imageStyleEnumToNameOut,
-                                   std::unordered_map<std::string, ImageStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo>* imageStyleNameToEnumOut)
+    static void GetImageStyleEnumMappings(std::unordered_map<ImageStyle, std::string, EnumHash>* imageStyleEnumToNameOut,
+                                          std::unordered_map<std::string, ImageStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo>* imageStyleNameToEnumOut)
     {
-        static std::unordered_map<ImageStyle, std::string, EnumHash> imageStyleEnumToName = {{ImageStyle::Default, "default"},
-                                                                                             {ImageStyle::Person, "person"}};
+        static const std::unordered_map<ImageStyle, std::string, EnumHash> imageStyleEnumToName = {{ImageStyle::Default, "default"},
+                                                                                                   {ImageStyle::Person, "person"}};
 
-        static std::unordered_map<std::string, ImageStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo> imageStyleNameToEnum = {
+        static const std::unordered_map<std::string, ImageStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo> imageStyleNameToEnum = {
             {"default", ImageStyle::Default},
             {"person", ImageStyle::Person},
             {"normal", ImageStyle::Default} // Back compat to support "Normal" for "Default" for pre V1.0 payloads
@@ -311,17 +313,17 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetImageSizeEnumMappings(std::unordered_map<ImageSize, std::string, EnumHash>* imageSizeEnumToNameOut,
-                                  std::unordered_map<std::string, ImageSize, CaseInsensitiveHash, CaseInsensitiveEqualTo>* imageSizeNameToEnumOut)
+    static void GetImageSizeEnumMappings(std::unordered_map<ImageSize, std::string, EnumHash>* imageSizeEnumToNameOut,
+                                         std::unordered_map<std::string, ImageSize, CaseInsensitiveHash, CaseInsensitiveEqualTo>* imageSizeNameToEnumOut)
     {
-        static std::unordered_map<ImageSize, std::string, EnumHash> imageSizeEnumToName = {
+        static const std::unordered_map<ImageSize, std::string, EnumHash> imageSizeEnumToName = {
             {ImageSize::Auto, "Auto"},
             {ImageSize::Large, "Large"},
             {ImageSize::Medium, "Medium"},
             {ImageSize::Small, "Small"},
             {ImageSize::Stretch, "Stretch"},
         };
-        static std::unordered_map<std::string, ImageSize, CaseInsensitiveHash, CaseInsensitiveEqualTo> imageSizeNameToEnum =
+        static const std::unordered_map<std::string, ImageSize, CaseInsensitiveHash, CaseInsensitiveEqualTo> imageSizeNameToEnum =
             GenerateStringToEnumMap<ImageSize>(imageSizeEnumToName);
 
         if (imageSizeEnumToNameOut != nullptr)
@@ -335,13 +337,13 @@ namespace AdaptiveSharedNamespace
         }
     };
 
-    void GetHorizontalAlignmentEnumMappings(
+    static void GetHorizontalAlignmentEnumMappings(
         std::unordered_map<HorizontalAlignment, std::string, EnumHash>* horizontalAlignmentEnumToNameOut,
         std::unordered_map<std::string, HorizontalAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo>* horizontalAlignmentNameToEnumOut)
     {
-        static std::unordered_map<HorizontalAlignment, std::string, EnumHash> horizontalAlignmentEnumToName = {
+        static const std::unordered_map<HorizontalAlignment, std::string, EnumHash> horizontalAlignmentEnumToName = {
             {HorizontalAlignment::Center, "Center"}, {HorizontalAlignment::Left, "Left"}, {HorizontalAlignment::Right, "Right"}};
-        static std::unordered_map<std::string, HorizontalAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo> horizontalAlignmentNameToEnum =
+        static const std::unordered_map<std::string, HorizontalAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo> horizontalAlignmentNameToEnum =
             GenerateStringToEnumMap<HorizontalAlignment>(horizontalAlignmentEnumToName);
 
         if (horizontalAlignmentEnumToNameOut != nullptr)
@@ -355,10 +357,10 @@ namespace AdaptiveSharedNamespace
         }
     };
 
-    void GetColorEnumMappings(std::unordered_map<ForegroundColor, std::string, EnumHash>* colorEnumToNameOut,
-                              std::unordered_map<std::string, ForegroundColor, CaseInsensitiveHash, CaseInsensitiveEqualTo>* colorNameToEnumOut)
+    static void GetColorEnumMappings(std::unordered_map<ForegroundColor, std::string, EnumHash>* colorEnumToNameOut,
+                                     std::unordered_map<std::string, ForegroundColor, CaseInsensitiveHash, CaseInsensitiveEqualTo>* colorNameToEnumOut)
     {
-        static std::unordered_map<ForegroundColor, std::string, EnumHash> colorEnumToName = {
+        static const std::unordered_map<ForegroundColor, std::string, EnumHash> colorEnumToName = {
             {ForegroundColor::Accent, "Accent"},
             {ForegroundColor::Attention, "Attention"},
             {ForegroundColor::Dark, "Dark"},
@@ -367,7 +369,7 @@ namespace AdaptiveSharedNamespace
             {ForegroundColor::Light, "Light"},
             {ForegroundColor::Warning, "Warning"},
         };
-        static std::unordered_map<std::string, ForegroundColor, CaseInsensitiveHash, CaseInsensitiveEqualTo> colorNameToEnum =
+        static const std::unordered_map<std::string, ForegroundColor, CaseInsensitiveHash, CaseInsensitiveEqualTo> colorNameToEnum =
             GenerateStringToEnumMap<ForegroundColor>(colorEnumToName);
 
         if (colorEnumToNameOut != nullptr)
@@ -381,16 +383,16 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetTextWeightEnumMappings(std::unordered_map<TextWeight, std::string, EnumHash>* textWeightEnumToNameOut,
-                                   std::unordered_map<std::string, TextWeight, CaseInsensitiveHash, CaseInsensitiveEqualTo>* textWeightNameToEnumOut)
+    static void GetTextWeightEnumMappings(std::unordered_map<TextWeight, std::string, EnumHash>* textWeightEnumToNameOut,
+                                          std::unordered_map<std::string, TextWeight, CaseInsensitiveHash, CaseInsensitiveEqualTo>* textWeightNameToEnumOut)
     {
-        static std::unordered_map<TextWeight, std::string, EnumHash> textWeightEnumToName = {
+        static const std::unordered_map<TextWeight, std::string, EnumHash> textWeightEnumToName = {
             {TextWeight::Bolder, "Bolder"},
             {TextWeight::Lighter, "Lighter"},
             {TextWeight::Default, "Default"},
         };
 
-        static std::unordered_map<std::string, TextWeight, CaseInsensitiveHash, CaseInsensitiveEqualTo> textWeightNameToEnum = {
+        static const std::unordered_map<std::string, TextWeight, CaseInsensitiveHash, CaseInsensitiveEqualTo> textWeightNameToEnum = {
             {"Bolder", TextWeight::Bolder},
             {"Lighter", TextWeight::Lighter},
             {"Default", TextWeight::Default},
@@ -408,10 +410,10 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetTextSizeEnumMappings(std::unordered_map<TextSize, std::string, EnumHash>* textSizeEnumToNameOut,
-                                 std::unordered_map<std::string, TextSize, CaseInsensitiveHash, CaseInsensitiveEqualTo>* textSizeNameToEnumOut)
+    static void GetTextSizeEnumMappings(std::unordered_map<TextSize, std::string, EnumHash>* textSizeEnumToNameOut,
+                                        std::unordered_map<std::string, TextSize, CaseInsensitiveHash, CaseInsensitiveEqualTo>* textSizeNameToEnumOut)
     {
-        static std::unordered_map<TextSize, std::string, EnumHash> textSizeEnumToName = {
+        static const std::unordered_map<TextSize, std::string, EnumHash> textSizeEnumToName = {
             {TextSize::ExtraLarge, "ExtraLarge"},
             {TextSize::Large, "Large"},
             {TextSize::Medium, "Medium"},
@@ -419,7 +421,7 @@ namespace AdaptiveSharedNamespace
             {TextSize::Small, "Small"},
         };
 
-        static std::unordered_map<std::string, TextSize, CaseInsensitiveHash, CaseInsensitiveEqualTo> textSizeNameToEnum = {
+        static const std::unordered_map<std::string, TextSize, CaseInsensitiveHash, CaseInsensitiveEqualTo> textSizeNameToEnum = {
             {"ExtraLarge", TextSize::ExtraLarge},
             {"Large", TextSize::Large},
             {"Medium", TextSize::Medium},
@@ -439,15 +441,15 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetActionsOrientationEnumMappings(
+    static void GetActionsOrientationEnumMappings(
         std::unordered_map<ActionsOrientation, std::string, EnumHash>* actionsOrientationEnumToNameOut,
         std::unordered_map<std::string, ActionsOrientation, CaseInsensitiveHash, CaseInsensitiveEqualTo>* actionsOrientationNameToEnumOut)
     {
-        static std::unordered_map<ActionsOrientation, std::string, EnumHash> actionsOrientationEnumToName = {
+        static const std::unordered_map<ActionsOrientation, std::string, EnumHash> actionsOrientationEnumToName = {
             {ActionsOrientation::Horizontal, "Horizontal"},
             {ActionsOrientation::Vertical, "Vertical"},
         };
-        static std::unordered_map<std::string, ActionsOrientation, CaseInsensitiveHash, CaseInsensitiveEqualTo> actionsOrientationNameToEnum =
+        static const std::unordered_map<std::string, ActionsOrientation, CaseInsensitiveHash, CaseInsensitiveEqualTo> actionsOrientationNameToEnum =
             GenerateStringToEnumMap<ActionsOrientation>(actionsOrientationEnumToName);
 
         if (actionsOrientationEnumToNameOut != nullptr)
@@ -461,12 +463,12 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetActionModeEnumMappings(std::unordered_map<ActionMode, std::string, EnumHash>* actionModeEnumToNameOut,
-                                   std::unordered_map<std::string, ActionMode, CaseInsensitiveHash, CaseInsensitiveEqualTo>* actionModeNameToEnumOut)
+    static void GetActionModeEnumMappings(std::unordered_map<ActionMode, std::string, EnumHash>* actionModeEnumToNameOut,
+                                          std::unordered_map<std::string, ActionMode, CaseInsensitiveHash, CaseInsensitiveEqualTo>* actionModeNameToEnumOut)
     {
-        static std::unordered_map<ActionMode, std::string, EnumHash> actionModeEnumToName = {{ActionMode::Inline, "Inline"},
-                                                                                             {ActionMode::Popup, "Popup"}};
-        static std::unordered_map<std::string, ActionMode, CaseInsensitiveHash, CaseInsensitiveEqualTo> actionModeNameToEnum =
+        static const std::unordered_map<ActionMode, std::string, EnumHash> actionModeEnumToName = {{ActionMode::Inline, "Inline"},
+                                                                                                   {ActionMode::Popup, "Popup"}};
+        static const std::unordered_map<std::string, ActionMode, CaseInsensitiveHash, CaseInsensitiveEqualTo> actionModeNameToEnum =
             GenerateStringToEnumMap<ActionMode>(actionModeEnumToName);
 
         if (actionModeEnumToNameOut != nullptr)
@@ -480,12 +482,12 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetChoiceSetStyleEnumMappings(std::unordered_map<ChoiceSetStyle, std::string, EnumHash>* choiceSetStyleEnumToNameOut,
-                                       std::unordered_map<std::string, ChoiceSetStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo>* choiceSetStyleNameToEnumOut)
+    static void GetChoiceSetStyleEnumMappings(std::unordered_map<ChoiceSetStyle, std::string, EnumHash>* choiceSetStyleEnumToNameOut,
+                                              std::unordered_map<std::string, ChoiceSetStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo>* choiceSetStyleNameToEnumOut)
     {
-        static std::unordered_map<ChoiceSetStyle, std::string, EnumHash> choiceSetStyleEnumToName = {
+        static const std::unordered_map<ChoiceSetStyle, std::string, EnumHash> choiceSetStyleEnumToName = {
             {ChoiceSetStyle::Compact, "Compact"}, {ChoiceSetStyle::Expanded, "Expanded"}};
-        static std::unordered_map<std::string, ChoiceSetStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo> choiceSetStyleNameToEnum =
+        static const std::unordered_map<std::string, ChoiceSetStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo> choiceSetStyleNameToEnum =
             GenerateStringToEnumMap<ChoiceSetStyle>(choiceSetStyleEnumToName);
 
         if (choiceSetStyleEnumToNameOut != nullptr)
@@ -499,16 +501,16 @@ namespace AdaptiveSharedNamespace
         }
     };
 
-    void GetTextInputStyleEnumMappings(std::unordered_map<TextInputStyle, std::string, EnumHash>* textInputStyleEnumToNameOut,
-                                       std::unordered_map<std::string, TextInputStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo>* textInputStyleNameToEnumOut)
+    static void GetTextInputStyleEnumMappings(std::unordered_map<TextInputStyle, std::string, EnumHash>* textInputStyleEnumToNameOut,
+                                              std::unordered_map<std::string, TextInputStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo>* textInputStyleNameToEnumOut)
     {
-        static std::unordered_map<TextInputStyle, std::string, EnumHash> textInputStyleEnumToName = {
+        static const std::unordered_map<TextInputStyle, std::string, EnumHash> textInputStyleEnumToName = {
             {TextInputStyle::Email, "Email"},
             {TextInputStyle::Tel, "Tel"},
             {TextInputStyle::Text, "Text"},
             {TextInputStyle::Url, "Url"},
         };
-        static std::unordered_map<std::string, TextInputStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo> textInputStyleNameToEnum =
+        static const std::unordered_map<std::string, TextInputStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo> textInputStyleNameToEnum =
             GenerateStringToEnumMap<TextInputStyle>(textInputStyleEnumToName);
 
         if (textInputStyleEnumToNameOut != nullptr)
@@ -522,14 +524,14 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetContainerStyleEnumMappings(std::unordered_map<ContainerStyle, std::string, EnumHash>* containerStyleEnumToNameOut,
-                                       std::unordered_map<std::string, ContainerStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo>* containerStyleNameToEnumOut)
+    static void GetContainerStyleEnumMappings(std::unordered_map<ContainerStyle, std::string, EnumHash>* containerStyleEnumToNameOut,
+                                              std::unordered_map<std::string, ContainerStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo>* containerStyleNameToEnumOut)
     {
-        static std::unordered_map<ContainerStyle, std::string, EnumHash> containerStyleEnumToName = {
+        static const std::unordered_map<ContainerStyle, std::string, EnumHash> containerStyleEnumToName = {
             {ContainerStyle::Default, "Default"},
             {ContainerStyle::Emphasis, "Emphasis"},
         };
-        static std::unordered_map<std::string, ContainerStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo> containerStyleNameToEnum =
+        static const std::unordered_map<std::string, ContainerStyle, CaseInsensitiveHash, CaseInsensitiveEqualTo> containerStyleNameToEnum =
             GenerateStringToEnumMap<ContainerStyle>(containerStyleEnumToName);
 
         if (containerStyleEnumToNameOut != nullptr)
@@ -543,16 +545,17 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetActionAlignmentEnumMappings(std::unordered_map<ActionAlignment, std::string, EnumHash>* actionAlignmentEnumToNameOut,
-                                        std::unordered_map<std::string, ActionAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo>* actionAlignmentNameToEnumOut)
+    static void GetActionAlignmentEnumMappings(
+        std::unordered_map<ActionAlignment, std::string, EnumHash>* actionAlignmentEnumToNameOut,
+        std::unordered_map<std::string, ActionAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo>* actionAlignmentNameToEnumOut)
     {
-        static std::unordered_map<ActionAlignment, std::string, EnumHash> actionAlignmentEnumToName = {
+        static const std::unordered_map<ActionAlignment, std::string, EnumHash> actionAlignmentEnumToName = {
             {ActionAlignment::Left, "Left"},
             {ActionAlignment::Center, "Center"},
             {ActionAlignment::Right, "Right"},
             {ActionAlignment::Stretch, "Stretch"},
         };
-        static std::unordered_map<std::string, ActionAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo> actionAlignmentNameToEnum =
+        static const std::unordered_map<std::string, ActionAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo> actionAlignmentNameToEnum =
             GenerateStringToEnumMap<ActionAlignment>(actionAlignmentEnumToName);
 
         if (actionAlignmentEnumToNameOut != nullptr)
@@ -566,12 +569,12 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetIconPlacementEnumMappings(std::unordered_map<IconPlacement, std::string, EnumHash>* iconPlacementEnumToNameOut,
-                                      std::unordered_map<std::string, IconPlacement, CaseInsensitiveHash, CaseInsensitiveEqualTo>* iconPlacementNameToEnumOut)
+    static void GetIconPlacementEnumMappings(std::unordered_map<IconPlacement, std::string, EnumHash>* iconPlacementEnumToNameOut,
+                                             std::unordered_map<std::string, IconPlacement, CaseInsensitiveHash, CaseInsensitiveEqualTo>* iconPlacementNameToEnumOut)
     {
-        static std::unordered_map<IconPlacement, std::string, EnumHash> iconPlacementEnumToName = {
+        static const std::unordered_map<IconPlacement, std::string, EnumHash> iconPlacementEnumToName = {
             {IconPlacement::AboveTitle, "AboveTitle"}, {IconPlacement::LeftOfTitle, "LeftOfTitle"}};
-        static std::unordered_map<std::string, IconPlacement, CaseInsensitiveHash, CaseInsensitiveEqualTo> iconPlacementNameToEnum =
+        static const std::unordered_map<std::string, IconPlacement, CaseInsensitiveHash, CaseInsensitiveEqualTo> iconPlacementNameToEnum =
             GenerateStringToEnumMap<IconPlacement>(iconPlacementEnumToName);
 
         if (iconPlacementEnumToNameOut != nullptr)
@@ -585,15 +588,15 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetVerticalContentAlignmentEnumMappings(
+    static void GetVerticalContentAlignmentEnumMappings(
         std::unordered_map<VerticalContentAlignment, std::string, EnumHash>* verticalContentAlignmentEnumToNameOut,
         std::unordered_map<std::string, VerticalContentAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo>* verticalContentAlignmentNameToEnumOut)
     {
-        static std::unordered_map<VerticalContentAlignment, std::string, EnumHash> verticalContentAlignmentEnumToName = {
+        static const std::unordered_map<VerticalContentAlignment, std::string, EnumHash> verticalContentAlignmentEnumToName = {
             {VerticalContentAlignment::Top, "Top"},
             {VerticalContentAlignment::Center, "Center"},
             {VerticalContentAlignment::Bottom, "Bottom"}};
-        static std::unordered_map<std::string, VerticalContentAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo> verticalContentAlignmentNameToEnum =
+        static const std::unordered_map<std::string, VerticalContentAlignment, CaseInsensitiveHash, CaseInsensitiveEqualTo> verticalContentAlignmentNameToEnum =
             GenerateStringToEnumMap<VerticalContentAlignment>(verticalContentAlignmentEnumToName);
 
         if (verticalContentAlignmentEnumToNameOut != nullptr)
@@ -607,17 +610,12 @@ namespace AdaptiveSharedNamespace
         }
     }
 
-    void GetSentimentEnumMappings(
-        std::unordered_map<Sentiment, std::string, EnumHash>* sentimentEnumToNameOut,
-        std::unordered_map<std::string, Sentiment, CaseInsensitiveHash, CaseInsensitiveEqualTo>* sentimentNameToEnumOut)
+    static void GetSentimentEnumMappings(std::unordered_map<Sentiment, std::string, EnumHash>* sentimentEnumToNameOut,
+                                         std::unordered_map<std::string, Sentiment, CaseInsensitiveHash, CaseInsensitiveEqualTo>* sentimentNameToEnumOut)
     {
-        static std::unordered_map<Sentiment, std::string, EnumHash> sentimentEnumToName =
-        {
-            {Sentiment::Default, "Default"},
-            {Sentiment::Positive, "Positive"},
-            {Sentiment::Destructive, "Destructive"}
-        };
-        static std::unordered_map<std::string, Sentiment, CaseInsensitiveHash, CaseInsensitiveEqualTo> sentimentNameToEnum =
+        static const std::unordered_map<Sentiment, std::string, EnumHash> sentimentEnumToName = {
+            {Sentiment::Default, "Default"}, {Sentiment::Positive, "Positive"}, {Sentiment::Destructive, "Destructive"}};
+        static const std::unordered_map<std::string, Sentiment, CaseInsensitiveHash, CaseInsensitiveEqualTo> sentimentNameToEnum =
             GenerateStringToEnumMap<Sentiment>(sentimentEnumToName);
 
         if (sentimentEnumToNameOut != nullptr)

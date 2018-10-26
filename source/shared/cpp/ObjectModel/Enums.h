@@ -437,7 +437,7 @@ namespace AdaptiveSharedNamespace
     GenerateStringToEnumMap(const std::unordered_map<T, std::string, EnumHash>& keyToStringMap)
     {
         std::unordered_map<std::string, T, CaseInsensitiveHash, CaseInsensitiveEqualTo> result;
-        for (auto& kv : keyToStringMap)
+        for (const auto& kv : keyToStringMap)
         {
             result[kv.second] = kv.first;
         }
